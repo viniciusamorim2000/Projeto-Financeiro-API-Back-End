@@ -2,7 +2,9 @@ package com.example.algamoney.api.resource;
 
 import com.example.algamoney.api.event.RecursoCriadoEvent;
 import com.example.algamoney.api.model.Categoria;
+import com.example.algamoney.api.model.Pessoa;
 import com.example.algamoney.api.repository.CategoriaRepository;
+import com.example.algamoney.api.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -17,37 +19,37 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/categorias")
-public class CategoriaResource {
+@RequestMapping("/pessoas")
+public class PessoaResource {
 
     @Autowired
-    private CategoriaRepository categoriaRepository;
+    private PessoaRepository pessoaRepository;
 
     @Autowired
     private ApplicationEventPublisher publisher;
 
     @GetMapping
-    public List<Categoria> listarTodos(){
-        return categoriaRepository.findAll();
+    public List<Pessoa> listarTodos(){
+        return pessoaRepository.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response){
-      Categoria categoriaSalva = categoriaRepository.save(categoria);
+    public ResponseEntity<Pessoa> criar(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response){
+      Pessoa pessoaSalva = pessoaRepository.save(pessoa);
 
-      publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));
+      publisher.publishEvent(new RecursoCriadoEvent(this,response,pessoaSalva.getCodigo()));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);
     }
 
     @GetMapping("/{codigo}")
     public ResponseEntity<?> buscarPeloCodigo(@PathVariable Long codigo) {
-        Optional<Categoria> categoria = categoriaRepository.findById(codigo);
+        Optional<Pessoa> pessoa = pessoaRepository.findById(codigo);
 
-        if (!categoria.isPresent()) {
+        if (!pessoa.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(categoria.get());
+        return ResponseEntity.ok(pessoa.get());
     }
 
 }
