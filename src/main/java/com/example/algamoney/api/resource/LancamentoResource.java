@@ -6,6 +6,7 @@ import com.example.algamoney.api.model.Categoria;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.repository.CategoriaRepository;
 import com.example.algamoney.api.repository.LancamentoRepository;
+import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -35,8 +36,9 @@ public class LancamentoResource {
     private MessageSource messageSource;
 
     @GetMapping
-    public List<Lancamento> listarTodos(){
-        return lancamentoRepository.findAll();
+    public List<Lancamento> listarTodos(LancamentoFilter lancamentoFilter){
+
+        return lancamentoRepository.filtrar(lancamentoFilter);
     }
 
     @PostMapping
